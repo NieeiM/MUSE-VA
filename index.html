@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="title" content="EMO datasets WebDemo">
+  <meta name="description" content="Interactive WebDemo for the EMO music dataset with music, Qwen-generated images, emotion labels, valence-arousal values, and text-image alignment cases.">
+  <meta name="keywords" content="EMO, music dataset, emotion, valence, arousal, music-image alignment">
+  <meta name="robots" content="index, follow">
+  <title>EMO datasets WebDemo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+</head>
+<body>
+  <button id="scroll-top-btn" class="scroll-top-btn" type="button" aria-label="Scroll to top">Top</button>
+
+  <main id="main-content">
+    <section class="hero hero-shell">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="hero-copy">
+            <h1 class="title hero-title">EMO datasets WebDemo</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft">
+      <div class="container is-max-desktop">
+        <div class="section-heading">
+          <h2 class="title is-3 section-title">Overview</h2>
+        </div>
+        <article class="info-panel overview-panel">
+          <p class="panel-kicker">Full dataset</p>
+          <div id="dataset-stats" class="metric-grid overview-metrics"></div>
+          <div>
+            <p class="panel-kicker">Emotion distribution</p>
+            <div id="emotion-bars" class="emotion-tags-grid"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="section-heading">
+          <h2 class="title is-3 section-title">Valence-Arousal Map</h2>
+          <p class="section-copy">Click a point to view the case details.</p>
+        </div>
+        <article class="info-panel va-panel">
+          <div id="va-scatter" class="va-scatter" aria-label="Valence-arousal scatter plot"></div>
+        </article>
+        <div id="active-case-wrap" class="active-case-wrap is-hidden">
+          <article id="active-case-card" class="case-card active-case-card"></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script defer src="static/js/index.js"></script>
+</body>
+</html>
