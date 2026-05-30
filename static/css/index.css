@@ -40,6 +40,8 @@ body {
 
 .hero-copy {
   max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .hero-title {
@@ -62,6 +64,8 @@ body {
   color: var(--muted);
   line-height: 1.75;
   max-width: 760px;
+  margin: 0.75rem auto 0;
+  text-align: center;
 }
 
 .metric-grid {
@@ -96,6 +100,7 @@ body {
 
 .section-heading {
   margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .section-title {
@@ -171,12 +176,80 @@ body {
 
 .va-scatter {
   position: relative;
-  min-height: 580px;
+  min-height: 0;
+}
+
+.va-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(220px, 0.45fr);
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.va-plot-wrap {
+  min-width: 0;
+  height: 100%;
+}
+
+.va-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  align-content: stretch;
+  height: 100%;
+}
+
+.va-legend-column {
+  display: grid;
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  gap: 0.4rem;
+  align-content: stretch;
+  justify-items: stretch;
+  height: 100%;
+}
+
+.va-legend-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0.35rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid var(--emotion-border, var(--line));
+  background: var(--emotion-bg, #f8fafc);
+  color: var(--emotion-text, var(--text));
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.12;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.va-legend-button:hover {
+  transform: translateX(-2px);
+}
+
+.va-legend-button.is-active {
+  border-color: var(--emotion-point, var(--orange));
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.va-legend-button.is-dimmed {
+  opacity: 0.5;
+}
+
+.va-legend-label {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .va-svg {
   width: 100%;
-  height: 580px;
+  height: 500px;
   display: block;
 }
 
@@ -209,18 +282,23 @@ body {
 }
 
 .scatter-point circle {
-  fill: #000000;
+  fill: var(--point-color, #0f172a);
   stroke: #ffffff;
   stroke-width: 1.2;
-  opacity: 0.82;
-  transition: fill 0.15s ease, opacity 0.15s ease, r 0.15s ease;
+  opacity: 0.9;
+  transition: fill 0.15s ease, opacity 0.15s ease, r 0.15s ease, stroke-width 0.15s ease;
+}
+
+.scatter-point.is-dimmed circle {
+  opacity: 0.12;
 }
 
 .scatter-point.is-focused circle,
+.scatter-point.is-emotion-active circle,
 .scatter-point:hover circle {
-  fill: var(--orange);
   opacity: 1;
   r: 5.2;
+  stroke-width: 1.8;
 }
 
 .active-case-wrap {
@@ -295,7 +373,7 @@ body {
 
 .meta-pill.is-id {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   letter-spacing: 0;
 }
 
@@ -422,6 +500,19 @@ body {
   .metric-grid {
     grid-template-columns: 1fr 1fr;
   }
+
+  .va-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .va-legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-top: 0;
+  }
+
+  .va-legend-column {
+    grid-template-rows: repeat(6, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 768px) {
@@ -442,10 +533,23 @@ body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .va-scatter,
   .va-svg {
-    min-height: 470px;
-    height: 470px;
+    height: 440px;
+  }
+
+  .va-legend {
+    grid-template-columns: 1fr;
+  }
+
+  .va-legend-column {
+    grid-template-rows: none;
+    height: auto;
+  }
+
+  .va-legend-button {
+    width: 100%;
+    height: auto;
+    padding: 0.35rem 0.65rem;
   }
 
   .case-card,

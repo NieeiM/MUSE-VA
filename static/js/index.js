@@ -3,6 +3,7 @@ const DATA_PATH = './data/cases.json';
 const APP_STATE = {
   data: null,
   focusedCaseId: null,
+  selectedEmotion: null,
   captionLang: 'en',
 };
 
@@ -25,7 +26,7 @@ const EMOTION_STYLE = {
   'Joyful, cheerful': { bg: '#fee2e2', border: '#dc2626', text: '#991b1b', point: '#dc2626' },
   'Amusing': { bg: '#ffedd5', border: '#f97316', text: '#c2410c', point: '#f97316' },
   'Dreamy': { bg: '#fce7f3', border: '#ec4899', text: '#9d174d', point: '#ec4899' },
-  'Triumphant, heroic': { bg: '#f8d7da', border: '#7f1d1d', text: '#7f1d1d', point: '#7f1d1d' },
+  'Triumphant, heroic': { bg: '#efc0cb', border: '#b91c3d', text: '#CF0A37', point: '#b91c3d' },
   'Energizing, pump-up': { bg: '#ecfccb', border: '#84cc16', text: '#3f6212', point: '#84cc16' },
   'Calm, relaxing, serene': { bg: '#dcfce7', border: '#22c55e', text: '#166534', point: '#22c55e' },
   'Indignant, defiant': { bg: '#ede9fe', border: '#8b5cf6', text: '#5b21b6', point: '#8b5cf6' },
@@ -49,6 +50,17 @@ const EMOTION_ZH = {
   'Scary, fearful': '恐怖、害怕',
   'Annoying': '烦躁',
 };
+
+const EMOTION_ORDER = Object.keys(EMOTION_STYLE);
+const EMOTION_WARM_GROUP = [
+  'Beautiful',
+  'Joyful, cheerful',
+  'Amusing',
+  'Dreamy',
+  'Triumphant, heroic',
+  'Energizing, pump-up',
+];
+const EMOTION_COOL_GROUP = EMOTION_ORDER.filter(emotion => !EMOTION_WARM_GROUP.includes(emotion));
 
 const GENRE_ZH = {
   'Ambient': '氛围音乐',
@@ -175,6 +187,13 @@ function getEmotionStyle(emotion) {
   return EMOTION_STYLE[emotion] || { bg: '#eff6ff', border: '#bfdbfe', text: '#1d4ed8', point: '#2563eb' };
 }
 
+function getEmotionCounts(cases) {
+  return cases.reduce((acc, item) => {
+    acc[item.emotion] = (acc[item.emotion] || 0) + 1;
+    return acc;
+  }, {});
+}
+
 function createMetricCard(label, value) {
   const div = document.createElement('div');
   div.className = 'metric-card';
@@ -288,28 +307,53 @@ function focusCase(caseId) {
   const caseItem = APP_STATE.data.cases.find(item => item.id === caseId);
   if (!caseItem) return;
 
-  document.querySelectorAll('.scatter-point').forEach(node => {
-    node.classList.toggle('is-focused', node.dataset.caseId === caseId);
-  });
-
   document.querySelectorAll('.case-card').forEach(node => {
     node.classList.toggle('is-focused', node.dataset.caseId === caseId);
   });
 
+  syncScatterSelection();
   renderActiveCase(caseItem);
+}
+
+function selectEmotion(emotion) {
+  const nextEmotion = APP_STATE.selectedEmotion === emotion ? null : emotion;
+  APP_STATE.selectedEmotion = nextEmotion;
+
+  syncScatterSelection();
+}
+
+function syncScatterSelection() {
+  const { focusedCaseId, selectedEmotion } = APP_STATE;
+
+  document.querySelectorAll('.scatter-point').forEach(node => {
+    const isFocused = node.dataset.caseId === focusedCaseId;
+    const isEmotionActive = Boolean(selectedEmotion) && node.dataset.emotion === selectedEmotion;
+    const isDimmed = Boolean(selectedEmotion) && node.dataset.emotion !== selectedEmotion;
+    node.classList.toggle('is-focused', isFocused);
+    node.classList.toggle('is-emotion-active', isEmotionActive);
+    node.classList.toggle('is-dimmed', isDimmed);
+  });
+
+  document.querySelectorAll('.va-legend-button').forEach(node => {
+    const isActive = node.dataset.emotion === selectedEmotion;
+    const isDimmed = Boolean(selectedEmotion) && node.dataset.emotion !== selectedEmotion;
+    node.classList.toggle('is-active', isActive);
+    node.classList.toggle('is-dimmed', isDimmed);
+  });
 }
 
 function renderScatter(cases) {
   const container = document.getElementById('va-scatter');
-  const width = 760;
-  const height = 560;
-  const margin = { top: 32, right: 36, bottom: 52, left: 56 };
+  const width = 620;
+  const height = 500;
+  const margin = { top: 28, right: 28, bottom: 48, left: 52 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
   const scaleX = value => margin.left + ((value - 1) / 8) * innerWidth;
   const scaleY = value => margin.top + innerHeight - ((value - 1) / 8) * innerHeight;
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const hashText = text => String(text).split('').reduce((acc, char) => ((acc * 31) + char.charCodeAt(0)) >>> 0, 7);
+  const emotionCounts = getEmotionCounts(cases);
   const jitterValue = (item, axis) => {
     const hash = hashText(`${item.id}-${axis}`);
     return ((hash % 1000) / 999 - 0.5) * 0.18;
@@ -338,21 +382,57 @@ function renderScatter(cases) {
   `;
 
   cases.forEach(item => {
+    const style = getEmotionStyle(item.emotion);
     const x = scaleX(clamp(item.valence + jitterValue(item, 'x'), 1, 9));
     const y = scaleY(clamp(item.arousal + jitterValue(item, 'y'), 1, 9));
     svg += `
-      <g class="scatter-point" data-case-id="${escapeHtml(item.id)}">
+      <g class="scatter-point" data-case-id="${escapeHtml(item.id)}" data-emotion="${escapeHtml(item.emotion)}" style="--point-color:${style.point};">
         <circle cx="${x}" cy="${y}" r="3.6"></circle>
       </g>
     `;
   });
 
   svg += '</svg>';
-  container.innerHTML = svg;
+  const renderLegendGroup = emotions => emotions
+    .filter(emotion => emotionCounts[emotion])
+    .map(emotion => {
+      const style = getEmotionStyle(emotion);
+      return `
+        <button
+          class="va-legend-button"
+          type="button"
+          data-emotion="${escapeHtml(emotion)}"
+          style="--emotion-bg:${style.bg};--emotion-border:${style.border};--emotion-text:${style.text};--emotion-point:${style.point};"
+        >
+          <span class="va-legend-label">${escapeHtml(emotion)}</span>
+        </button>
+      `;
+    })
+    .join('');
+
+  container.innerHTML = `
+    <div class="va-layout">
+      <div class="va-plot-wrap">${svg}</div>
+      <div class="va-legend" aria-label="Emotion labels">
+        <div class="va-legend-column va-legend-column-warm" aria-label="Warm emotions">
+          ${renderLegendGroup(EMOTION_WARM_GROUP)}
+        </div>
+        <div class="va-legend-column va-legend-column-cool" aria-label="Cool emotions">
+          ${renderLegendGroup(EMOTION_COOL_GROUP)}
+        </div>
+      </div>
+    </div>
+  `;
 
   container.querySelectorAll('.scatter-point').forEach(point => {
     point.addEventListener('click', () => focusCase(point.dataset.caseId));
   });
+
+  container.querySelectorAll('.va-legend-button').forEach(button => {
+    button.addEventListener('click', () => selectEmotion(button.dataset.emotion));
+  });
+
+  syncScatterSelection();
 }
 
 function bindScrollTop() {
