@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="title" content="EMO datasets WebDemo">
-  <meta name="description" content="Interactive WebDemo for the EMO music dataset with music, Qwen-generated images, emotion labels, valence-arousal values, and text-image alignment cases.">
-  <meta name="keywords" content="EMO, music dataset, emotion, valence, arousal, music-image alignment">
+  <meta name="title" content="MUSE-VA: A Large-Scale Synthetic Multimodal Dataset for Music Emotion Understanding and Generation">
+  <meta name="description" content="MUSE-VA is a large-scale multimodal music emotion dataset with balanced valence-arousal coverage, text descriptions, music metadata, and one-to-one music-image pairs.">
+  <meta name="keywords" content="MUSE-VA, music emotion dataset, valence arousal, affective computing, multimodal dataset, music generation">
+  <meta name="author" content="Jiahao Mei, Yixuan Yuan, Haoyu Gu, Shimeng Li, Leyuan Jin, Mengyue Wu, Yue Ding">
   <meta name="robots" content="index, follow">
-  <title>EMO datasets WebDemo</title>
+  <title>MUSE-VA: A Large-Scale Synthetic Multimodal Dataset for Music Emotion Understanding and Generation</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,13 +21,69 @@
   <button id="scroll-top-btn" class="scroll-top-btn" type="button" aria-label="Scroll to top">Top</button>
 
   <main id="main-content">
-    <section class="hero hero-shell">
+    <section class="hero top-hero">
       <div class="hero-body">
-        <div class="container is-max-desktop">
-          <div class="hero-copy">
-            <h1 class="title hero-title">EMO datasets WebDemo</h1>
+        <div class="container is-max-desktop has-text-centered">
+          <h1 class="title is-2 publication-title">MUSE-VA: A Large-Scale Synthetic Multimodal Dataset for Music Emotion Understanding and Generation</h1>
+          <p class="publication-authors-inline">Jiahao Mei<sup>1</sup>, Yixuan Yuan<sup>2</sup>, Haoyu Gu<sup>3</sup>, Shimeng Li<sup>1</sup>, Leyuan Jin<sup>1</sup>, Mengyue Wu<sup>1*</sup>, Yue Ding<sup>2*</sup></p>
+          <p class="publication-affiliations">
+            <span><sup>1</sup> X-LANCE Lab, Shanghai Jiao Tong University, China</span>
+            <span><sup>2</sup> Shanghai Mental Health Center, Shanghai Jiao Tong University School of Medicine, China</span>
+            <span><sup>3</sup> School of Future Technology, South China University of Technology, China</span>
+          </p>
+          <div class="hero-demo-link-wrap">
+            <a class="button is-dark hero-demo-link" href="#" target="_blank" rel="noopener noreferrer">
+              <span class="button-icon">arXiv</span>
+            </a>
+            <a class="button is-dark hero-demo-link" href="https://github.com/NieeiM/MUSE-VA-Pipeline" target="_blank" rel="noopener noreferrer">
+              <span class="button-icon">Code</span>
+            </a>
+            <a class="button is-dark hero-demo-link" href="https://huggingface.co/datasets/jiahaomei/MUSE-VA" target="_blank" rel="noopener noreferrer">
+              <span class="button-icon">Dataset</span>
+            </a>
           </div>
+          <p class="subtitle is-5 app-intro">
+            A large-scale multimodal music emotion dataset for affective music understanding, generation, and cross-modal research.
+          </p>
         </div>
+      </div>
+    </section>
+
+    <section class="section paper-overview-section">
+      <div class="container is-max-desktop">
+        <div class="paper-summary-grid">
+          <article class="info-panel abstract-panel">
+            <p class="section-kicker">Abstract</p>
+            <p class="abstract-copy">
+              Music affective computing relies on high-quality, large-scale, and emotionally balanced data resources, yet existing music emotion datasets are often limited in scale, uneven in valence-arousal coverage, narrow in annotation granularity, and lacking in cross-modal affective pairings. MUSE-VA introduces a large-scale multimodal music emotion dataset constructed from uniformly sampled VA coordinates through an affective and musical knowledge-injected five-stage LLM agent pipeline. The dataset contains 6,254 complete music pieces totaling 321.1 hours, with continuous VA annotations, 12 discrete emotion labels, music metadata, text descriptions, and one-to-one music-image pairs. Objective experiments and a human listening study show that MUSE-VA supports music emotion regression, controllable affective music generation, and cross-modal affective modeling.
+            </p>
+          </article>
+
+          <article class="info-panel highlight-panel">
+            <p class="section-kicker">Contributions</p>
+            <ul class="highlight-list">
+              <li><strong>Balanced multimodal dataset.</strong> MUSE-VA provides 6,254 complete music pieces and 321.1 hours of audio with VA values, discrete emotion labels, text descriptions, music metadata, and paired images.</li>
+              <li><strong>VA-driven construction.</strong> The dataset starts from uniformly sampled VA coordinates and uses a five-stage LLM distillation pipeline to control emotion-space coverage by design.</li>
+              <li><strong>Knowledge-guided reasoning.</strong> Affective and musical knowledge bases guide emotion mapping, theme selection, music association, captioning, visual imagery, and consistency verification.</li>
+              <li><strong>Broad validation.</strong> MUSE-VA is evaluated through emotion regression, affective music generation, music-image matching, and subjective listening studies.</li>
+            </ul>
+          </article>
+        </div>
+
+        <article class="info-panel architecture-panel">
+          <div class="architecture-copy">
+            <p class="section-kicker">Architecture</p>
+            <h2 class="title is-3 section-title">VA-Driven Five-Stage LLM Agent Pipeline</h2>
+          </div>
+          <div class="figure-shell">
+            <a class="architecture-figure-link" href="static/images/pipeline.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open MUSE-VA architecture figure as a PDF">
+              <img class="architecture-image" src="static/images/pipeline.png" alt="Overview of the five-stage pipeline for constructing MUSE-VA">
+            </a>
+          </div>
+          <p class="figure-caption">
+            Overview of the five-stage pipeline for constructing MUSE-VA. The pipeline starts from uniformly sampled coordinates in the VA space and progressively accumulates contextual information across five stages, producing multimodal data entries with audio, images, and structured annotations.
+          </p>
+        </article>
       </div>
     </section>
 
