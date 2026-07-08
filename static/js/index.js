@@ -8,10 +8,10 @@ const APP_STATE = {
 };
 
 const FULL_DATASET_OVERVIEW = {
-  total_tracks: 6255,
+  total_tracks: 6254,
+  duration_hours: 321.1,
   splits: { train: 5004, valid: 625, test: 626 },
   emotion_count: 12,
-  genre_count: 90,
   valence: { mean: 4.99, min: 1.0, max: 9.0 },
   arousal: { mean: 5.05, min: 1.0, max: 9.0 },
   audio_meta: {
@@ -194,9 +194,9 @@ function getEmotionCounts(cases) {
   }, {});
 }
 
-function createMetricCard(label, value) {
+function createMetricCard(label, value, className = '') {
   const div = document.createElement('div');
-  div.className = 'metric-card';
+  div.className = `metric-card ${className}`.trim();
   div.innerHTML = `
     <span class="metric-label">${escapeHtml(label)}</span>
     <span class="metric-value">${escapeHtml(value)}</span>
@@ -231,35 +231,28 @@ function syncCaptionLanguageUI(caseItem) {
   });
 }
 
-function renderStatistics(dataset, selectedSummary) {
+function renderStatistics(dataset) {
   const datasetNode = document.getElementById('dataset-stats');
-  const emotionBarsNode = document.getElementById('emotion-bars');
+  if (!datasetNode) return;
+
   const fullDataset = { ...dataset, ...FULL_DATASET_OVERVIEW };
 
   const fullMetrics = [
     ['Tracks', String(fullDataset.total_tracks)],
-    ['Genres', String(fullDataset.genre_count)],
-    ['Valence range', `${formatNumber(fullDataset.valence.min, 1)} - ${formatNumber(fullDataset.valence.max, 1)}`],
-    ['Arousal range', `${formatNumber(fullDataset.arousal.min, 1)} - ${formatNumber(fullDataset.arousal.max, 1)}`],
-    ['Valence mean', formatNumber(fullDataset.valence.mean, 2)],
-    ['Arousal mean', formatNumber(fullDataset.arousal.mean, 2)],
+    ['Duration', `${formatNumber(fullDataset.duration_hours, 1)}h`],
     ['Sample rate', `${fullDataset.audio_meta.sample_rate_hz} Hz`],
-    ['Channels', String(fullDataset.audio_meta.channels)],
+    ['Valence-Arousal', '[1,9]×[1,9]'],
+    ['Discrete emotions', String(fullDataset.emotion_count)],
+    ['Music-image pairing', '1:1'],
+    ['Music caption', '✅'],
+    ['Music metadata', '✅'],
+    ['Image caption', '✅'],
   ];
 
   datasetNode.innerHTML = '';
-  emotionBarsNode.innerHTML = '';
 
-  fullMetrics.forEach(metric => datasetNode.appendChild(createMetricCard(...metric)));
-  Object.keys(selectedSummary.emotion_distribution).forEach(name => {
-    const style = getEmotionStyle(name);
-    const tag = document.createElement('div');
-    tag.className = 'emotion-tag';
-    tag.style.setProperty('--emotion-bg', style.bg);
-    tag.style.setProperty('--emotion-border', style.border);
-    tag.style.setProperty('--emotion-text', style.text);
-    tag.innerHTML = `<span>${escapeHtml(name)}</span>`;
-    emotionBarsNode.appendChild(tag);
+  fullMetrics.forEach(([label, value, className]) => {
+    datasetNode.appendChild(createMetricCard(label, value, className));
   });
 }
 
@@ -344,6 +337,8 @@ function syncScatterSelection() {
 
 function renderScatter(cases) {
   const container = document.getElementById('va-scatter');
+  if (!container) return;
+
   const width = 620;
   const height = 500;
   const margin = { top: 28, right: 28, bottom: 48, left: 52 };
@@ -456,7 +451,7 @@ async function main() {
   const data = await loadData();
   APP_STATE.data = data;
 
-  renderStatistics(data.dataset, data.selected_summary);
+  renderStatistics(data.dataset);
   renderScatter(data.cases);
 }
 

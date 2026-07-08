@@ -12,10 +12,18 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/index.css">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
 </head>
 <body>
   <button id="scroll-top-btn" class="scroll-top-btn" type="button" aria-label="Scroll to top">Top</button>
@@ -33,17 +41,20 @@
           </p>
           <div class="hero-demo-link-wrap">
             <a class="button is-dark hero-demo-link" href="#" target="_blank" rel="noopener noreferrer">
-              <span class="button-icon">arXiv</span>
+              <span class="icon"><i class="ai ai-arxiv"></i></span>
+              <span>arXiv</span>
             </a>
             <a class="button is-dark hero-demo-link" href="https://github.com/NieeiM/MUSE-VA-Pipeline" target="_blank" rel="noopener noreferrer">
-              <span class="button-icon">Code</span>
+              <span class="icon"><i class="fab fa-github"></i></span>
+              <span>Code</span>
             </a>
             <a class="button is-dark hero-demo-link" href="https://huggingface.co/datasets/jiahaomei/MUSE-VA" target="_blank" rel="noopener noreferrer">
-              <span class="button-icon">Dataset</span>
+              <span class="icon"><img class="hf-icon" src="static/images/hf-logo.svg" alt="" aria-hidden="true"></span>
+              <span>Dataset</span>
             </a>
           </div>
           <p class="subtitle is-5 app-intro">
-            A large-scale multimodal music emotion dataset for affective music understanding, generation, and cross-modal research.
+            MUSE-VA is a large-scale, VA-balanced multimodal music emotion dataset built through a five-stage LLM-driven pipeline to support emotion understanding, controllable music generation, and cross-modal affective research.
           </p>
         </div>
       </div>
@@ -95,10 +106,6 @@
         <article class="info-panel overview-panel">
           <p class="panel-kicker">Full dataset</p>
           <div id="dataset-stats" class="metric-grid overview-metrics"></div>
-          <div>
-            <p class="panel-kicker">Emotion distribution</p>
-            <div id="emotion-bars" class="emotion-tags-grid"></div>
-          </div>
         </article>
       </div>
     </section>
@@ -108,6 +115,10 @@
         <div class="section-heading">
           <h2 class="title is-3 section-title">Valence-Arousal Map</h2>
           <p class="section-copy">Click a point or an emotion label to highlight matching cases and view the details.</p>
+          <p class="section-note">
+            The full MUSE-VA dataset contains 6,255 tracks. This interactive map visualizes a random subset of 157 examples; access the complete dataset on
+            <a href="https://huggingface.co/datasets/jiahaomei/MUSE-VA" target="_blank" rel="noopener noreferrer">Hugging Face Dataset</a>.
+          </p>
         </div>
         <article class="info-panel va-panel">
           <div id="va-scatter" class="va-scatter" aria-label="Valence-arousal scatter plot"></div>

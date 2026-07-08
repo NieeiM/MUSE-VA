@@ -135,12 +135,34 @@ body {
 
 .hero-demo-link {
   min-width: 160px;
-}
-
-.button-icon {
-  display: inline-flex;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
+  gap: 0.45rem;
+}
+
+.hero-demo-link .icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.hero-demo-link .icon i,
+.hero-demo-link .icon svg {
+  font-size: 1rem;
+}
+
+.hero-demo-link .icon img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.hf-icon {
+  width: 1.15rem;
+  height: 1.15rem;
 }
 
 .app-intro {
@@ -165,6 +187,26 @@ body {
   max-width: 760px;
   margin: 0.75rem auto 0;
   text-align: center;
+}
+
+.section-note {
+  max-width: 760px;
+  margin: 0.7rem auto 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.section-note a {
+  color: var(--primary-color);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.section-note a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
 }
 
 .metric-grid {
@@ -336,7 +378,7 @@ body {
 }
 
 .overview-metrics {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .metric-card {
